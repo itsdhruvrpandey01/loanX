@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: customer-service  # MUST match customer-service.yml in loanX-config
+  config:
+    import: "optional:configserver:http://localhost:8888"
