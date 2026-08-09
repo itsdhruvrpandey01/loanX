@@ -1,4 +1,4 @@
-package com.loanx.auth_service;
+package com.loanx.authservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
