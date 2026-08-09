@@ -8,5 +8,5 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/your-username/loanX-config.git
+          uri: https://github.com/itsdhruvrpandey01/loanX-config.git
           default-label: main
