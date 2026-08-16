@@ -1,14 +1,34 @@
 package com.loanx.customer.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
-@Table(name = "customers")
+@Table(
+    name = "customers",
+    indexes = {
+        @Index(name = "idx_customer_customer_number", columnList = "customer_number"),
+        @Index(name = "idx_customer_status", columnList = "customer_status_code"),
+        @Index(name = "idx_customer_type", columnList = "customer_type_code"),
+        @Index(name = "idx_customer_name", columnList = "first_name,last_name")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,8 +48,7 @@ public class Customer {
     private String customerTypeCode;
 
     @Column(name = "customer_status_code", nullable = false, length = 30)
-    @Builder.Default
-    private String customerStatusCode = "ACTIVE";
+    private String customerStatusCode;
 
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
@@ -85,4 +104,30 @@ public class Customer {
     @Version
     @Column(name = "version", nullable = false)
     private Long version;
+
+    @PrePersist
+    protected void onCreate() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        this.createdAt = now;
+        this.updatedAt = now;
+
+        if (this.customerStatusCode == null) {
+            this.customerStatusCode = "ACTIVE";
+        }
+
+        if (this.kycStatusCode == null) {
+            this.kycStatusCode = "PENDING";
+        }
+
+        if (this.version == null) {
+            this.version = 0L;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
